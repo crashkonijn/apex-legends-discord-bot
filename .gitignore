@@ -1,0 +1,12 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+.idea/
+*.db
+tests/
+src/ApexDiscordBot/appsettings.Development.json
+config/
+docker-compose.yml
+src/WebApi/appsettings.Development.json
