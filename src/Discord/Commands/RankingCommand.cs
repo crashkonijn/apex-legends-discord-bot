@@ -26,7 +26,9 @@ public class RankingCommand : SlashCommandBase
 
     public override async Task Handle(SocketSlashCommand command)
     {
-        var players = (await this._playerRepository.GetTracked()).CurrentSeason();
+        var players = await this._playerRepository.GetTracked();
+        var season = players.CurrentSeasonNumber();
+        players = players.CurrentSeason();
 
         if (!players.Any())
         {
@@ -44,7 +46,7 @@ public class RankingCommand : SlashCommandBase
 
         var text = string.Join("\n", ordered.Select(this.ToRank));
         
-        await command.RespondAsync(text);
+        await command.RespondAsync($"Season {season} stats:\n{text}");
     }
 
     private string ToRank(Player player, int index)
