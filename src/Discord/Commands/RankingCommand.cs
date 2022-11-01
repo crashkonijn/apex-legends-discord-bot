@@ -26,7 +26,7 @@ public class RankingCommand : SlashCommandBase
 
     public override async Task Handle(SocketSlashCommand command)
     {
-        var players = await this._playerRepository.GetTracked();
+        var players = (await this._playerRepository.GetTracked()).CurrentSeason();
 
         if (!players.Any())
         {
