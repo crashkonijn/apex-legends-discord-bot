@@ -48,6 +48,9 @@ public class StatsService : IStatsService
             return;
         
         var existing = await this._repository.GetStats(username);
+
+        if (existing?.Rank == loaded.Rank)
+            return;
         
         await this._repository.Upsert(loaded);
 
