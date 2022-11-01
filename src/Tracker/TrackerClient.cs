@@ -49,7 +49,10 @@ public class TrackerClient : ITrackerClient
 
         try
         {
-            stat.Rank = match.SelectToken("stats.rankScore.value").Value<int>();
+            var rank = match.SelectToken("stats.rankScore.value").Value<int>();
+
+            if (rank > stat.Rank)
+                stat.Rank = rank;
         }
         catch (Exception e) { Console.WriteLine(data); Console.WriteLine(e); }
 
@@ -98,8 +101,8 @@ public class TrackerClient : ITrackerClient
         {
             var overview = jo.SelectToken("data.segments").First(x => x.SelectToken("type").Value<string>() == "overview");
 
-            // var rankName = overview.SelectToken("stats.rankScore.metadata.rankName").Value<string>();
-            // var rank = overview.SelectToken("stats.rankScore.value").Value<int>();
+            stat.RankName = overview.SelectToken("stats.rankScore.metadata.rankName").Value<string>();
+            stat.Rank = overview.SelectToken("stats.rankScore.value").Value<int>();
 
             stat.Kills = overview.SelectToken("stats.kills.value").Value<int>();
         }
