@@ -49,6 +49,9 @@ public class StatsService : IStatsService
         
         var existing = await this._repository.GetStats(username);
 
+        if (loaded.Rank == 0)
+            return;
+
         if (existing?.Rank == loaded.Rank)
             return;
         
