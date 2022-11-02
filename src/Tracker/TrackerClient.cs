@@ -45,7 +45,13 @@ public class TrackerClient : ITrackerClient
         var data = await response.Content.ReadAsStringAsync();
         var jo = JObject.Parse(data);
         
-        var match = jo.SelectToken("data.items").First().SelectToken("matches").First();
+        var session = jo.SelectToken("data.items").First();
+        var isActive = session.SelectToken("metadata.isActive.value")?.Value<bool>() ?? false;
+
+        if (!isActive)
+            return stat;
+        
+        var match = session.SelectToken("matches").First();
 
         try
         {

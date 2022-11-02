@@ -1,5 +1,9 @@
 ﻿using Application.Services;
+using Application.UseCases.GetPlayers;
+using Application.UseCases.GetRanking;
+using Application.UseCases.GetStats;
 using Application.UseCases.Import;
+using Application.UseCases.LoadStats;
 using Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +17,11 @@ public static class ApplicationModule
         services.AddSingleton<IStatsService, StatsService>();
 
         services.AddSingleton<IImportUseCase, ImportUseCase>();
+        
+        services.AddSingleton<GetStatsUseCase>();
+        services.AddSingleton<GetRankingUseCase>();
+        services.AddSingleton<LoadStatsUseCase>();
+        services.AddSingleton<GetPlayersUseCase>();
         
         services.Configure<ApplicationOptions>(config.GetSection(ApplicationOptions.ConfigurationEntry));
     }

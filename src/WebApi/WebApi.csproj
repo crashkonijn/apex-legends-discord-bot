@@ -19,8 +19,4 @@
       <ProjectReference Include="..\Tracker\Tracker.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Controllers" />
-    </ItemGroup>
-
 </Project>
