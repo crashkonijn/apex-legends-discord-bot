@@ -16,15 +16,12 @@ public class StatsBackgroundService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await this._statsService.LoadAndCompare("CrashKonijn");
-        return;
-        
         while (!cancellationToken.IsCancellationRequested)
         {
             try
             {
                 
-                // await this.LoadUsers();
+                await this.LoadUsers();
                 await Task.Delay(TimeSpan.FromMinutes(5), cancellationToken);
             }
             catch (Exception e)
