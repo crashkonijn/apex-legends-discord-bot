@@ -9,4 +9,5 @@ public interface IPlayerRepository
     Task Upsert(Player player);
     Task<Player[]> GetTracked();
     Task<Player> GetByStat(Stat stat);
+    Task<Season> GuessSeason();
 }

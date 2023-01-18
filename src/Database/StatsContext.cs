@@ -11,11 +11,14 @@ public class StatsContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Player> Players { get; set; }
     public DbSet<Stat> Stats { get; set; }
+    public DbSet<Season> Seasons { get; set; }
 
     public readonly string DbPath;
 
+    
     public StatsContext(IOptions<ApplicationOptions> options)
     {
+        Console.WriteLine(options.Value.GetPath("config/stats.db"));
         this.DbPath = options.Value.GetPath("stats.db");
     }
 
@@ -46,7 +49,10 @@ public class StatsContext : DbContext
             .HasKey(c => new { c.Id });
         
         modelBuilder.Entity<Stat>()
-            .HasIndex(c => new { c.PlayerId, c.Season })
+            .HasIndex(c => new { c.PlayerId, c.Season, c.Split })
             .IsUnique();
+        
+        modelBuilder.Entity<Season>()
+            .HasKey(c => c.Id);
     }
 }

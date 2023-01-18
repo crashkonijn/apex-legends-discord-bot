@@ -77,4 +77,18 @@ public class PlayerRepository : IPlayerRepository
 
         return this._mapper.Map<Player>(player);
     }
+
+    public async Task<Season> GuessSeason()
+    {
+        var players = await this.GetTracked();
+        var seasons = players.SelectMany(x => x.Stats.Select(y => new Season
+        {
+            Number = y.Season,
+            Split = y.Split
+        }));
+        
+        var guess= seasons.MaxBy(x => x.Id);
+        
+        return guess ?? new Season();
+    }
 }

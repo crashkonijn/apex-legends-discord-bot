@@ -33,6 +33,6 @@ public class RankingController
 public class GetRankingRequest {}
 public class GetRankingResponse
 {
-    public int Season { get; set; }
+    public string Season { get; set; }
     public Player[] Players { get; set; }
 }

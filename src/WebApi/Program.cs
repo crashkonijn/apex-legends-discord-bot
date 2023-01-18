@@ -37,6 +37,7 @@ using (var scope = app.Services.CreateScope())
         databaseContext.Database.Migrate();
     }
 
+    await services.GetRequiredService<IEnsureSeasonUseCase>().Execute();
     await services.GetRequiredService<IImportUseCase>().Execute();
 }
 

@@ -1,4 +1,5 @@
 ﻿using Application.Services;
+using Application.UseCases.EnsureSeason;
 using Application.UseCases.GetPlayers;
 using Application.UseCases.GetRanking;
 using Application.UseCases.GetStats;
@@ -15,8 +16,11 @@ public static class ApplicationModule
     public static void RegisterApplicationModule(this IServiceCollection services, IConfiguration config)
     {
         services.AddSingleton<IStatsService, StatsService>();
+        services.AddSingleton<IStatCompareService, StatCompareService>();
+        services.AddSingleton<ISeasonService, SeasonService>();
 
         services.AddSingleton<IImportUseCase, ImportUseCase>();
+        services.AddSingleton<IEnsureSeasonUseCase, EnsureSeasonUseCase>();
         
         services.AddSingleton<GetStatsUseCase>();
         services.AddSingleton<GetRankingUseCase>();

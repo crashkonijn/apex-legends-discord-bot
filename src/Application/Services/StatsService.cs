@@ -9,13 +9,15 @@ public class StatsService : IStatsService
     private readonly ITrackerClient _trackerClient;
     private readonly IMessageService _messageService;
     private readonly IPlayerRepository _playerRepository;
+    private readonly ISeasonService _seasonService;
 
-    public StatsService(IStatsRepository repository, ITrackerClient trackerClient, IMessageService messageService, IPlayerRepository playerRepository)
+    public StatsService(IStatsRepository repository, ITrackerClient trackerClient, IMessageService messageService, IPlayerRepository playerRepository, ISeasonService seasonService)
     {
         this._repository = repository;
         this._trackerClient = trackerClient;
         this._messageService = messageService;
         this._playerRepository = playerRepository;
+        this._seasonService = seasonService;
     }
     
     public async Task<Stat?> GetStats(string username)
@@ -54,17 +56,16 @@ public class StatsService : IStatsService
 
         if (existing?.Rank == loaded.Rank)
             return;
+
+        await this._seasonService.HandleSeasonChanges(loaded, existing);
         
         await this._repository.Upsert(loaded);
 
-        if (existing?.RankName == loaded.RankName)
-            return;
-
         var player = await this._playerRepository.GetByStat(loaded);
         
-        await this._messageService.RankUpdate(player);
+        await this._messageService.RankUpdate(player, loaded, existing);
     }
-
+    
     public Task<Stat[]> GetAll()
     {
         return this._repository.GetAll();
