@@ -10,9 +10,11 @@ public static class DatabaseModule
     public static void RegisterDatabaseModule(this IServiceCollection services, IConfiguration config)
     {
         services.AddAutoMapper(typeof(DatabaseModule));
+        
         services.AddSingleton<IStatsRepository, StatsRepository>();
         services.AddSingleton<IPlayerRepository, PlayerRepository>();
         services.AddSingleton<IUserRepository, UserRepository>();
+        services.AddSingleton<ISeasonRepository, SeasonRepository>();
         
         services.AddDbContextFactory<StatsContext>();
     }

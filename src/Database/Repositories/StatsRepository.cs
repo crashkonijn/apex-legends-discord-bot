@@ -12,20 +12,24 @@ public class StatsRepository : IStatsRepository
     private readonly IDbContextFactory<StatsContext> _contextFactory;
     private readonly IMapper _mapper;
     private readonly IPlayerRepository _playerRepository;
+    private readonly ISeasonRepository _seasonRepository;
 
-    public StatsRepository(IDbContextFactory<StatsContext> contextFactory, IMapper mapper, IPlayerRepository playerRepository)
+    public StatsRepository(IDbContextFactory<StatsContext> contextFactory, IMapper mapper, IPlayerRepository playerRepository, ISeasonRepository seasonRepository)
     {
         this._contextFactory = contextFactory;
         this._mapper = mapper;
         this._playerRepository = playerRepository;
+        this._seasonRepository = seasonRepository;
     }
     
     public async Task<Stat?> GetStats(string username, Platform platform = Platform.Origin)
     {
         var context = await this._contextFactory.CreateDbContextAsync();
 
+        var currentSeason = await this._seasonRepository.GetCurrentSeason();
+
         var stats = await context.Players.Where(x => x.Platform == platform && x.Username == username).Select(x => x.Stats).FirstOrDefaultAsync();
-        var stat = stats?.MaxBy(x => x.Season);
+        var stat = stats?.Find(x => x.Season == currentSeason.Number && x.Split == currentSeason.Split);
 
         if (stat is null)
             return null;
@@ -44,7 +48,7 @@ public class StatsRepository : IStatsRepository
 
         var player = await this._playerRepository.GetOrCreate(Platform.Origin, stat.Username);
 
-        var existing = await context.Stats.Where(x => x.PlayerId == player.Id && x.Season == stat.Season).FirstOrDefaultAsync();
+        var existing = await context.Stats.Where(x => x.PlayerId == player.Id && x.Season == stat.Season && x.Split == stat.Split).FirstOrDefaultAsync();
 
         if (existing is null)
         {

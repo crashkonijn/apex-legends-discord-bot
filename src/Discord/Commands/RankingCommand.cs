@@ -10,12 +10,14 @@ public class RankingCommand : SlashCommandBase
 {
     private readonly IStatsService _statsService;
     private readonly IPlayerRepository _playerRepository;
+    private readonly ISeasonRepository _seasonRepository;
     public override string Name => "ranking";
 
-    public RankingCommand(IStatsService statsService, IPlayerRepository playerRepository)
+    public RankingCommand(IStatsService statsService, IPlayerRepository playerRepository, ISeasonRepository seasonRepository)
     {
         this._statsService = statsService;
         this._playerRepository = playerRepository;
+        this._seasonRepository = seasonRepository;
     }
     
     public override SlashCommandBuilder Init()
@@ -26,9 +28,11 @@ public class RankingCommand : SlashCommandBase
 
     public override async Task Handle(SocketSlashCommand command)
     {
+        var season = await this._seasonRepository.GetCurrentSeason();
+        
         var players = await this._playerRepository.GetTracked();
-        var season = players.CurrentSeasonNumber();
-        players = players.CurrentSeason();
+        
+        players = players.CurrentSeason(season);
 
         if (!players.Any())
         {
@@ -46,7 +50,7 @@ public class RankingCommand : SlashCommandBase
 
         var text = string.Join("\n", ordered.Select(this.ToRank));
         
-        await command.RespondAsync($"Season {season} stats:\n{text}");
+        await command.RespondAsync($"Season {season.Number} (split: {season.Split}) stats:\n{text}");
     }
 
     private string ToRank(Player player, int index)
