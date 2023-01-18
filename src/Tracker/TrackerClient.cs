@@ -47,7 +47,7 @@ public class TrackerClient : ITrackerClient
         
         var session = jo.SelectToken("data.items").First();
         var isActive = session.SelectToken("metadata.isActive.value")?.Value<bool>() ?? false;
-
+        
         if (!isActive)
             return stat;
         

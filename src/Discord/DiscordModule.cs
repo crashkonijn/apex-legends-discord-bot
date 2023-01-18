@@ -18,6 +18,7 @@ public static class DiscordModule
         services.AddSingleton<ISlashCommand, StatsCommand>();
         services.AddSingleton<ISlashCommand, RankingCommand>();
         services.AddSingleton<ISlashCommand, TrackedCommand>();
+        services.AddSingleton<ISlashCommand, RefreshCommand>();
         
         services.Configure<DiscordOptions>(configuration.GetSection(DiscordOptions.ConfigurationEntry));
     }
